@@ -1,0 +1,15 @@
+{
+  "dependencies": {
+    "express": "^4.19.2"
+  },
+  "scripts": {
+    "start": "node server.js"
+  },
+  "name": "open-backend-mongodb",
+  "version": "1.0.0",
+  "main": "server.js",
+  "devDependencies": {},
+  "author": "",
+  "license": "ISC",
+  "description": ""
+}
