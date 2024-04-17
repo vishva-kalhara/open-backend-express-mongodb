@@ -8,6 +8,7 @@ const hpp = require('hpp');
 
 const AppError = require('./utils/appError');
 const globalErrorHandler = require('./controllers/errorController');
+const authRouter = require('./routes/authRoutes');
 
 const app = express();
 
@@ -25,7 +26,7 @@ const limiter = rateLimit({
 });
 app.use('/api', limiter);
 
-// Body Parser
+// Body Parser limiting the size to 10kb
 app.use(express.json({ max: '10kb' }));
 
 // Data sanitization against NoSql Injection
@@ -43,6 +44,9 @@ app.use(
 
 // Serving static files
 app.use(express.static(`${__dirname}/public`));
+
+// Routing
+app.use('/api/v1/auth', authRouter);
 
 // 404 Error route
 app.all('*', (req, res, next) => {
