@@ -6,7 +6,9 @@
   "license": "ISC",
   "description": "",
   "scripts": {
-    "start": "npx nodemon server.js"
+    "start": "npx cross-env NODE_ENV=development nodemon server.js",
+    "start:prod": "npx cross-env NODE_ENV=production nodemon server.js",
+    "debug": "ndb server.js"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",

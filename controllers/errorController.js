@@ -1,3 +1,12 @@
+const handleValidationErrors = (error) => {
+  const newError = error;
+  newError.statusCode = 400;
+  newError.status = 'fail';
+  newError.message = Object.values(error.errors)[0].message;
+
+  return newError;
+};
+
 const sendErrorDev = (err, res) => {
   res.status(err.statusCode).json({
     status: err.status,
@@ -8,7 +17,7 @@ const sendErrorDev = (err, res) => {
 };
 
 const sendErrorProd = (err, res) => {
-  console.error('Error 💥💥', err);
+  // console.error('Error 💥💥', err);
   if (err.isOperational) {
     res.status(err.statusCode).json({
       status: err.status,
@@ -23,11 +32,16 @@ const sendErrorProd = (err, res) => {
 };
 
 module.exports = (err, req, res, next) => {
-  const errorObj = err;
+  let errorObj = err;
 
   errorObj.statusCode = err.statusCode || 500;
   errorObj.status = err.status || 'error';
 
   if (process.env.NODE_ENV === 'development') sendErrorDev(errorObj, res);
-  else if (process.env.NODE_ENV === 'production') sendErrorProd(errorObj, res);
+  else if (process.env.NODE_ENV === 'production') {
+    if (errorObj.name === 'ValidationError') {
+      errorObj = handleValidationErrors(errorObj);
+    }
+    sendErrorProd(errorObj, res);
+  }
 };

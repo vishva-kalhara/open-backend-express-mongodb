@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
+const bcrypt = require('bcryptjs');
 
 const userSchema = mongoose.Schema({
   email: {
@@ -17,14 +18,20 @@ const userSchema = mongoose.Schema({
   },
   password: {
     type: String,
-    require: [true, 'Password is a required field'],
-    minlength: 8,
+    required: [true, 'Password is a required field'],
+    // minlength: 8,
+    validate: {
+      validator: function () {
+        return this.password.length >= 8;
+      },
+      message: 'Password Shoud be longer than 8 characters.',
+    },
     trim: true,
     select: false,
   },
   confirmPassword: {
     type: String,
-    require: [true, 'Confirm password is a required field'],
+    required: [true, 'Confirm password is a required field'],
     trim: true,
     validate: {
       // Works only when using CREATE and SAVE
@@ -33,6 +40,10 @@ const userSchema = mongoose.Schema({
       },
       message: 'Password and Confirm Password does not match.',
     },
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now(),
   },
   passwordResetAt: Date,
   passwordResetToken: String,
@@ -44,4 +55,19 @@ const userSchema = mongoose.Schema({
   },
 });
 
-module.exports = userSchema;
+// Hash Password and remove confirm Password
+userSchema.pre('save', async function (next) {
+  // Document saved without modifying password
+  if (!this.isModified('password')) next();
+
+  this.password = await bcrypt.hash(this.password, 10);
+  this.confirmPassword = undefined;
+
+  next();
+});
+
+// Add passwordResetAt
+
+const User = mongoose.model('User', userSchema);
+
+module.exports = User;
