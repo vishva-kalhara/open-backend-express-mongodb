@@ -68,6 +68,18 @@ userSchema.pre('save', async function (next) {
 
 // Add passwordResetAt
 
+userSchema.methods.isPasswordChanged = function (JWTTimeStamp) {
+  if (this.passwordResetAt) {
+    const changedTimeStamp = parseInt(
+      this.passwordResetAt.getTime() / 1000,
+      10,
+    );
+
+    return JWTTimeStamp < changedTimeStamp;
+  }
+  return false;
+};
+
 const User = mongoose.model('User', userSchema);
 
 module.exports = User;
