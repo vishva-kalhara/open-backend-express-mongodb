@@ -58,7 +58,7 @@ const userSchema = mongoose.Schema({
 // Hash Password and remove confirm Password
 userSchema.pre('save', async function (next) {
   // Document saved without modifying password
-  if (!this.isModified('password')) next();
+  if (!this.isModified('password')) return next();
 
   this.password = await bcrypt.hash(this.password, 10);
   this.confirmPassword = undefined;
@@ -67,6 +67,17 @@ userSchema.pre('save', async function (next) {
 });
 
 // Add passwordResetAt
+userSchema.pre('save', async function (next) {
+  if (!this.isModified('password') || this.isNew) return next();
+
+  this.passwordResetAt = Date.now() - 1000;
+  next();
+});
+
+userSchema.pre(/^find/, function (next) {
+  this.find({ isActive: { $ne: false } });
+  next();
+});
 
 userSchema.methods.isPasswordChanged = function (JWTTimeStamp) {
   if (this.passwordResetAt) {

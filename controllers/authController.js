@@ -1,6 +1,5 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
-const { promisify } = require('util');
 
 const User = require('../models/userModel');
 const catchAsync = require('../utils/catchAsync');
@@ -35,41 +34,7 @@ const createSendToken = (user, statusCode, res) => {
   });
 };
 
-// exports.protect = catchAsync(async (req, res, next) => {
-//   let token;
-//   if (
-//     req.headers.authorization &&
-//     req.headers.authorization.startsWith('Bearer')
-//   ) {
-//     token = req.headers.authorization.split(' ')[1];
-//   }
-
-//   if (!token)
-//     return next(
-//       new AppError(
-//         "You're not logged in! please log in to the application",
-//         401,
-//       ),
-//     );
-
-//   const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
-
-//   const userExist = await User.findById(decoded.id);
-//   if (!userExist)
-//     return next(
-//       new AppError('The User associated wit this token is deleted.', 401),
-//     );
-
-//   const isChangedPassword = await userExist.isPasswordChanged(decoded.iat);
-//   if (isChangedPassword)
-//     return next(
-//       new AppError('User recently changed password! Please login again.', 401),
-//     );
-//   console.log(userExist.id);
-
-//   req.user = userExist;
-//   next();
-// });
+// const updatePassword = () => {};
 
 exports.signUp = catchAsync(async (req, res, next) => {
   const { email, password, confirmPassword } = req.body;
@@ -119,7 +84,23 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {});
 exports.resetPassword = catchAsync(async (req, res, next) => {});
 
 exports.updateMyPassword = catchAsync(async (req, res, next) => {
-  res.status(200).json({
-    user: req.user,
-  });
+  const { currentPassword, password, confirmPassword } = req.body;
+
+  const userExist = await User.findById(req.user.id).select('+password');
+  if (!userExist)
+    return next(
+      new AppError('There is no account associated with this account.', 404),
+    );
+
+  // Match currentPassword with the password in the db
+  const isMatched = await isPasswordsMatch(currentPassword, userExist.password);
+  if (!isMatched)
+    return next(new AppError('Current Password is not matching', 401));
+
+  // Reset Password
+  userExist.password = password;
+  userExist.confirmPassword = confirmPassword;
+  await userExist.save();
+
+  createSendToken(userExist, 200, res);
 });
