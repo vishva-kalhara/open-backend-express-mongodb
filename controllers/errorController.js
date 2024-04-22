@@ -18,6 +18,7 @@ const sendErrorDev = (err, res) => {
 
 const sendErrorProd = (err, res) => {
   console.error('Error 💥💥', err);
+  // console.log(JSON.stringify(err));
   if (err.isOperational) {
     res.status(err.statusCode).json({
       status: err.status,
