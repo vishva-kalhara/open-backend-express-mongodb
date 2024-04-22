@@ -4,6 +4,7 @@ const bcrypt = require('bcryptjs');
 const User = require('../models/userModel');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
+const sendEmail = require('../utils/email');
 
 const signToken = (id) =>
   jwt.sign({ id }, process.env.JWT_SECRET, {
@@ -77,9 +78,13 @@ exports.logIn = catchAsync(async (req, res, next) => {
   createSendToken(user, 200, res);
 });
 
-exports.RestrictTo = catchAsync(async (req, res, next) => {});
-
-exports.forgotPassword = catchAsync(async (req, res, next) => {});
+exports.forgotPassword = catchAsync(async (req, res, next) => {
+  sendEmail({
+    toEmail: 'test@gmail.com',
+    subject: 'test',
+    content: 'this is test',
+  });
+});
 
 exports.resetPassword = catchAsync(async (req, res, next) => {});
 
