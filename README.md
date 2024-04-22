@@ -97,7 +97,7 @@ To run this project, you will need to add the following environment variables to
 #### Update password by a logged user
 
 ```http
-  PATCH /api/v1/auth/resetPassword/:token
+  PATCH /api/v1/auth/resetPassword/
 ```
 
 | Request Header  | Type     | IsRequired | Description             |
