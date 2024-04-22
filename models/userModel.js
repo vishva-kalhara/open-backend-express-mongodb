@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
 const bcrypt = require('bcryptjs');
+const crypto = require('crypto');
 
 const userSchema = mongoose.Schema({
   email: {
@@ -19,7 +20,6 @@ const userSchema = mongoose.Schema({
   password: {
     type: String,
     required: [true, 'Password is a required field'],
-    // minlength: 8,
     validate: {
       validator: function () {
         return this.password.length >= 8;
@@ -74,11 +74,13 @@ userSchema.pre('save', async function (next) {
   next();
 });
 
+// Remove diactived accounts
 userSchema.pre(/^find/, function (next) {
   this.find({ isActive: { $ne: false } });
   next();
 });
 
+// Checks whether the password is changed after the JWT is issued or not
 userSchema.methods.isPasswordChanged = function (JWTTimeStamp) {
   if (this.passwordResetAt) {
     const changedTimeStamp = parseInt(
@@ -89,6 +91,19 @@ userSchema.methods.isPasswordChanged = function (JWTTimeStamp) {
     return JWTTimeStamp < changedTimeStamp;
   }
   return false;
+};
+
+// Generates the reset token and expiration date
+userSchema.methods.createPasswordResetToken = function () {
+  const resetToken = crypto.randomBytes(6).toString('hex');
+
+  this.passwordResetToken = crypto
+    .createHash('sha256')
+    .update(resetToken)
+    .digest('hex');
+  this.passwordResetExpires = Date.now() + 10 * 60 * 1000;
+
+  return resetToken;
 };
 
 const User = mongoose.model('User', userSchema);

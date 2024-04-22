@@ -79,11 +79,43 @@ exports.logIn = catchAsync(async (req, res, next) => {
 });
 
 exports.forgotPassword = catchAsync(async (req, res, next) => {
-  sendEmail({
-    toEmail: 'test@gmail.com',
-    subject: 'test',
-    content: 'this is test',
-  });
+  const { email } = req.body;
+
+  // validate the email is not null
+  if (!email) return next(new AppError('Please provide Email', 400));
+
+  // Get the user account
+  const user = await User.findOne({ email });
+  if (!user)
+    return next(
+      new AppError('There is no account associated with this Email.', 401),
+    );
+
+  // Generates reset token and persist data in db
+  const token = await user.createPasswordResetToken();
+  await user.save({ validateBeforeSave: false });
+
+  // Sending Email
+  try {
+    sendEmail({
+      toEmail: email,
+      subject: 'Reset Password',
+      content: `Here is your password reset token: ${token}`,
+    });
+
+    res.status(200).json({
+      staus: 'success',
+      message: 'Token sent to email!',
+    });
+  } catch (err) {
+    user.passwordResetExpires = undefined;
+    user.passwordResetToken = undefined;
+    await user.save();
+
+    return next(
+      new AppError("Couldn't send the email! Please tyr again later.", 500),
+    );
+  }
 });
 
 exports.resetPassword = catchAsync(async (req, res, next) => {});
