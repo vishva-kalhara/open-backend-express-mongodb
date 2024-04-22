@@ -2,19 +2,12 @@
 
 Create Node.js backend with Express and MongoDB with built-in Authentication and Authorization, Security and Error Handling.
 
-[Click here](https://github.com/vishva-kalhara/open-backend-express-mongodb/generate) to create a new repository based on this template
-
 - Open-Backend-MongoDB works on macOS, Windows, and Linux.
 - If something doesn't work please [file and issue](https://github.com/vishva-kalhara/open-backend-express-mongodb/issues)
 
 ## Getting Started
 
-Install open-backend-mongodb with npm
-
-```bash
-  npm install create-open-backend
-  npm start
-```
+[Click here](https://github.com/vishva-kalhara/open-backend-express-mongodb/generate) to create a new repository based on this template
 
 ## Environment Variables
 
@@ -32,7 +25,7 @@ To run this project, you will need to add the following environment variables to
 
 `JWT_EXPIRES_IN`: JWT expiration date in (in days)
 
-`JWT_COOKEI_EXPIRES_IN`: WHen sending JWT with a cookie, expiration date in (Accepts only a number)
+`JWT_COOKEI_EXPIRES_IN`: When sending JWT with a cookie, expiration date in (Accepts only a number)
 
 `EMAIL_HOST`: Email provider
 
