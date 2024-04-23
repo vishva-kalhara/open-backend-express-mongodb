@@ -1,5 +1,5 @@
 {
-  "name": "create-open-backend-mongodb",
+  "name": "@wishva/create-open-backend",
   "version": "1.0.0",
   "main": "server.js",
   "author": "Wishva Kalhara Chandrasekara",
