@@ -10,7 +10,7 @@ Create Node.js backend with Express and MongoDB with built-in Authentication and
 Install locally with npm
 
 ```bash
-  npx @wishva/create-open-backend
+  npx @wishva/create-open-backend <Repo>
 ```
 
 [Click here](https://github.com/vishva-kalhara/open-backend-express-mongodb/generate) to create a new repository based on this template

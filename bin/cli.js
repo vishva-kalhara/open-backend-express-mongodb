@@ -13,8 +13,9 @@ const runCommand = (command) => {
   return true;
 };
 
-const gitCheckoutCommand = `git clone --depth 1 https://github.com/vishva-kalhara/open-backend-express-mongodb`;
-const installDepsCommand = `npm install`;
+const repoName = process.argv[2];
+const gitCheckoutCommand = `git clone --depth 1 https://github.com/vishva-kalhara/open-backend-express-mongodb ${repoName}`;
+const installDepsCommand = `cd ${repoName} && npm install`;
 
 console.log('Cloning the Repository');
 const checkedOut = runCommand(gitCheckoutCommand);
@@ -25,4 +26,4 @@ const idDepsInstalled = runCommand(installDepsCommand);
 if (!idDepsInstalled) process.exit(-1);
 
 console.log('Happy Hacking');
-console.log(`npm start`);
+console.log(`cd ${repoName} && npm start`);
