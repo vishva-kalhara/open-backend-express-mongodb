@@ -1,6 +1,6 @@
 {
   "name": "@wishva/create-open-backend",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "main": "server.js",
   "author": "Wishva Kalhara Chandrasekara",
   "license": "MIT",

@@ -1,6 +1,6 @@
 # Open-Backend-MongoDB
 
-Create Node.js backend with Express and MongoDB with built-in Authentication and Authorization, Security and Error Handling.
+Build a robust Node.js backend using Express and MongoDB, incorporating integrated Authentication, Authorization, Security measures, and [comprehensive Error Handling](https://medium.com/@vishvakalhara/error-handling-in-node-js-and-express-04d60488ed6b).
 
 - Open-Backend-MongoDB works on macOS, Windows, and Linux.
 - If something doesn't work please [file and issue](https://github.com/vishva-kalhara/open-backend-express-mongodb/issues)
