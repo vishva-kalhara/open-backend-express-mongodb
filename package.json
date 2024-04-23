@@ -7,7 +7,8 @@
   "bin": "./bin/cli.js",
   "description": "Create Node.js backend with Express and MongoDB with built-in Authentication and Authorization, Security and Error Handling.",
   "scripts": {
-    "start": "npx cross-env NODE_ENV=development nodemon server.js",
+    "start": "node server.js",
+    "start:dev": "npx cross-env NODE_ENV=development nodemon server.js",
     "start:prod": "npx cross-env NODE_ENV=production nodemon server.js",
     "debug": "ndb server.js"
   },

@@ -10,7 +10,7 @@ process.on('uncaughtException', (err) => {
   process.exit(1);
 });
 
-dotenv.config({ path: './config101.env' });
+dotenv.config({ path: './config.env' });
 
 // Replace Password string
 const DB = process.env.DB_URL.replace('<PASSWORD>', process.env.DB_PASSWORD);
